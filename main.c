@@ -240,32 +240,31 @@ void  insertionsortlist(struct telement* l ) {
         printf("the list is already sorted");
     }
      int nbComp =0, nbPerm =0:
-    struct telement *P;
-    struct telement *Q;
+    struct telement *cur;
+    struct telement *prev;
      struct telement *P2;
     struct telement *temp;
-    P = l;
-    Q = l->next;
-    while (Q != NULL) {
-        P2 = Q->next;
+     prev= l;
+    cur = l->next;
+    while (cur!= NULL) {
+
         nbComp++;
-        if (strcmp(P->mot, Q->mot) > 0) {
-          Q->next = P;
-          P=Q;
-          l=P;
-          nbPerm++;
+        if (strcmp(cur->mot, prev->mot) > 0) {
+         prev = cur;
+         cur = cur->next;
         }
         else {
-                temp = P;
-        while(temp->next != NULL && strcmp(temp->next->mot, Q->mot)<0){
+                temp = l;
+        while(temp->next != NULL && strcmp(temp->next->mot, cur->mot)<0){
                 temp = temp->next;
 
         }
-        Q->next=temp->next;
-        temp->next= Q;
+        prev->next = cur->next;
+        cur->next= temp ->next;
+        temp->next= cur;
         nbPerm++:
         }
-        Q = P2;
+        cur = prev ->next;
     }
       printf("nombre de comparaison : %d \n" , nbrComp);
     printf("nombre de permutations : %d\n", nbrPerm);
