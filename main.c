@@ -26,12 +26,12 @@ int countelements(struct telement *l){
     int ne=0;
     while(l != NULL){
         ne++;
+        l=l->next;
     }
     return ne;
 }
 // function to create array of integers
 void  createarray(int n,int arr[]){
-    int arr[n];
     for(int i=0;i<n;i++){
             printf("enter the %d element", &i+1);
            scanf("%d", &arr[i]);
@@ -131,44 +131,51 @@ void BubbleSortMatrix(char matrix[][100], int rows) {
     printf("nombre de comparaison : %d \n" , nbrComp);
     printf("nombre de permutations : %d\n", nbrPerm);
 }
-// bubble sort of a linked list
-void Bubblesortlist( struct telement *l){
-     if (l == NULL || l->next == NULL{
-      printf("the list is already sorted");
-     }
-     int n = countelements(l);
-     int nbComp =0, nbPerm =0:
+
+// bubble sort of the linked list
+void Bubblesortlist(struct telement *list) {
+    if (list == NULL || list->next == NULL) {
+        printf("The list is already sorted\n");// si la liste a un seul element elle est triee
+        return;
+    }
+
+    int n = countelements(list);// on compte le num des elements de la liste
+    int nbComp = 0, nbPerm = 0;
     struct telement *P;
     struct telement *Q;
-     struct telement *prev;
-     prev = NULL;
-     Q = l;
-     for (int i=0;i<n;i++){
-            while(Q->next!=NULL){
-                nbComp++;
-                if(strcmp(Q->mot, Q->next->mot)>0){
-                    P = Q->next;
-                    Q->next = P->next;
-                    P->next = Q;
-                nbPerm++;
-                    if(prev == NULL){
-                        l = P;
-                    }
-                    else{
-                        prev->next=P;
-                    }
-                }
-                prev = P;
-                else{
-                    prev = Q;
-                    Q = Q->next;
-                }
+    struct telement *prev;
 
+    for (int i = 0; i < n - 1; i++) {//boucle pour la repetition du traitement
+        prev = NULL;//on initialise li'element precedent par null (precedent de la tete)
+        Q = list;// et on va parcourir la list par Q
+
+        while (Q->next != NULL) {
+            nbComp++;// on commence la comparaison
+            if (strcmp(Q->mot, Q->next->mot) > 0) {// Q.mot est superieur a Q>next.mot
+                P = Q->next;// on fait la permutation
+                Q->next = P->next;
+                P->next = Q;
+                nbPerm++;// et on incremente le nbr de permutation
+                if (prev == NULL) {// si on est ds la tete
+                    list = P;
+                } else {
+                    prev->next = P;// on met a jor la tete par le nv element
+                }
+              prev = P;//on met a jour l'element precedent
+              printf("la liste apres la pernutation num  %d: ", nbPerm);
+                Displaylist(list);// affichage
             }
-            Displaylist(l);
-     }
-
+             else {// si on est pas besoin du permutation
+                prev = Q;
+                Q = Q->next;// on va juste aller a l'element suivant
+            }
+        }
+        Q = list;
+    }
+     printf("nombre de comparaison et permutations : %d , %d\n" , nbComp, nbPerm);
 }
+
+
 // the function merge
  // global variables for comp & perm counters
 int nbrComp = 0;
@@ -243,80 +250,87 @@ void insertionsort(int arr[], int sizeofarr){
   printf("Number of comparisons : %d \n" , nbrComp);
   printf("number of permutations : %d \n" , nbrPerm);
 }
+
 // the insertion sort of a linked list
-void  insertionsortlist(struct telement* l ) {
-    if (l == NULL || l->next == NULL){
-        printf("the list is already sorted");
+void insertionsortlist(struct telement *list) {
+    if (list == NULL || list->next == NULL) {
+        printf("The list is already sorted\n");
     }
-     int nbComp =0, nbPerm =0:
-    struct telement *cur;
-    struct telement *prev;
-     struct telement *P2;
+
+    int nbComp = 0, nbPerm = 0;
+    struct telement *cur = list->next;
+    struct telement *prev = list;
     struct telement *temp;
-     prev= l;
-    cur = l->next;
-    while (cur!= NULL) {
 
+    while (cur != NULL) {
         nbComp++;
-        if (strcmp(cur->mot, prev->mot) > 0) {
-         prev = cur;
-         cur = cur->next;
-        }
-        else {
-                temp = l;
-        while(temp->next != NULL && strcmp(temp->next->mot, cur->mot)<0){
-                temp = temp->next;
+        if (strcmp(prev->mot, cur->mot) <= 0) {
+            prev = cur;
+            cur = cur->next;
+        } else {
+            temp = list;
+            prev->next = cur->next;
 
+            if (strcmp(list->mot, cur->mot) > 0) {
+                cur->next = list;
+                list = cur;
+                nbPerm++;
+            } else {
+                while (temp->next != NULL && strcmp(temp->next->mot, cur->mot) < 0) {
+                    temp = temp->next;
+                    nbComp++;
+                }
+                cur->next = temp->next;
+                temp->next = cur;
+                nbPerm++;
+            }
+            cur = prev->next;
         }
-        prev->next = cur->next;
-        cur->next= temp ->next;
-        temp->next= cur;
-        nbPerm++:
-        }
-        cur = prev ->next;
-        Displaylist(l);
+        printf("Apres %d permutations:\n", nbPerm);
+        Displaylist(list);
     }
-      printf("nombre de comparaison : %d \n" , nbrComp);
-    printf("nombre de permutations : %d\n", nbrPerm);
-
+    printf(" nombre de Comparisons: %d\n et de permutations: %d\n", nbComp, nbPerm);
 }
 
 // the function of quick sort
 // the function that does the partitioning
-int NbrComp=0,NbrPerm=0;
-int partition(int arr[], int start, int end ){
-    int pivot, i , j, temp;
-    pivot = arr[end];
-    i= start-1;
-    for(j=start;j<end-1;j++){
-            NbrComp++;
-        if(arr[j]<pivot){
-           i++;
-           temp = arr[i];
-           arr[i] = arr[j];
-           arr[j] = temp;
+int NbrComp = 0, NbrPerm = 0;// global variables so we can use them
 
-        NbrPerm++;
+int partition(int arr[], int start, int end) {
+    int pivot = arr[end];
+    int i = start - 1;
+
+    for (int j = start; j < end; j++) {
+        NbrComp++;
+        if (arr[j] <= pivot) {
+            i++;
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+            NbrPerm++;
+            printf("apres %d permutations\n", NbrPerm);
+            Display(arr, end + 1);
         }
     }
+
     i++;
-    temp = arr[i];
-    arr[i]= arr[end];
+    int temp = arr[i];
+    arr[i] = arr[end];
     arr[end] = temp;
     NbrPerm++;
-    return i;
 
+    return i;
 }
 
- // the quick sort algorithm using the recursive calls
- void quicksort( int arr, int start, int end){
-       int nbrComp =0, nbrPerm =0;
-     if (start < end){
+// The quick sort algorithm using recursive calls
+void quicksort(int arr[], int start, int end) {
+    if (start < end) {
         int pivot = partition(arr, start, end);
-        quicksort(arr, start, pivot -1);
-        quicksort(arr, pivot +1, end);
-     }
- }
+        quicksort(arr, start, pivot - 1);
+        quicksort(arr, pivot + 1, end);
+    }
+}
+
 
  // comb sort function using 1.3 factor(the most common used factor)
  void combsort(int arr[], int sizeofarr){
@@ -341,7 +355,7 @@ int partition(int arr[], int start, int end ){
  }
 
 int main()
-{
+{/*
     int choice;
     printf("choose what data structure do you want to sort");
       printf("\n=========================================================\n");
@@ -435,13 +449,12 @@ int main()
             printf("Invalid choice.\n");
             break;
     }
-    /*
-
-    int array [] = {64 , 34 , 25 , 12 , 22 , 11 , 90};
-    int arraySize = sizeof(array) / sizeof(array[0]);
 
     char matrix[][100] = {"gfr","zvc","qwe", "axd"};
     int rows = sizeof(matrix) / sizeof(matrix[0]);
+
+    int array [] = {64 , 34 , 25 , 12 , 22 , 11 , 90};
+    int arraySize = sizeof(array) / sizeof(array[0]);
 
     printf ("original array \n");
     Display(array , arraySize);
@@ -490,7 +503,7 @@ int main()
      Display(array , arraySize);
      printf("Number of comparisons : %d \n" , NbrComp);
      printf("number of permutations : %d \n" , NbrPerm);
-
+/*
     printf("comb sorting execution \n");
     combsort(array , arraySize);
     printf("sorted array using comb sorting \n ");
@@ -508,14 +521,17 @@ int main()
     second->next = third;
     third->next = NULL;
 
-    printf("Before sorting: \n");
+    printf("original list: \n");
+    Displaylist(l);
+    insertionsortlist(l);
+    printf("After insertion sorting: \n");
     Displaylist(l);
 
-   insertionsortlist(l);
-
-    printf("After sorting: \n");
+     printf("original list: \n");
+    Displaylist(l);
+    Bubblesortlist(l);
+    printf("After bubble sorting: \n");
     Displaylist(l);
 */
-
     return 0;
 }
