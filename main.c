@@ -18,7 +18,7 @@ void Displaylist(struct telement *l){
 // create a new element
 void createlement (char word[]){
      struct telement * p= (struct telement*)malloc(sizeof(struct telement));
-   // p->mot = word;
+    strcpy(p->mot,word);
     p->next = NULL;
 }
 // function to count number of elements in a list
@@ -33,11 +33,42 @@ int countelements(struct telement *l){
 // function to create array of integers
 void  createarray(int n,int arr[]){
     for(int i=0;i<n;i++){
-            printf("enter the %d element", &i+1);
+            printf("enter the %d element:", i+1);
            scanf("%d", &arr[i]);
     }
 }
+// function to create a list
+struct telement *createlist(int nelements) {
+    struct telement *list = NULL;
 
+    for (int i = 0; i < nelements; i++) {
+        char word[50];
+        struct telement *newele = (struct telement*)malloc(sizeof(struct telement));
+        printf("Entrez le mot du %d element: ", i + 1);
+        scanf("%s", &word);
+       strcpy(newele->mot, word);
+        newele->next = NULL;
+        if (list == NULL) {
+            list= newele;
+        } else {
+           while(list != NULL){
+            list = list->next;
+           }
+           list->next=newele;
+        }
+    }
+
+    return list;
+}
+// function to create a matrix of characters
+void creatMatrix (int rows , int collones , char  matrix[rows][collones]){
+  for (int i = 0 ; i < rows ; i++){
+    for (int j = 0 ; i < collones ; j++){
+        printf("give the %d element" , i+1);
+        scanf("%d\n" , &matrix[i][j]);
+    }
+  }
+}
 // function to display the matrix
 void DisplayMatrix(char matrix[][100], int rows) {
     for (int i = 0; i < rows; i++) {
@@ -229,6 +260,52 @@ void MergeSort (int arr [] , int low , int high){
         Merge( arr , low , mid , high);
     }
 }
+// merge sort with a matrix
+ // merge function
+void MergeMatrix(char arr[], int low, int mid, int high) {
+    char temp[high - low + 1];
+    int left = low;
+    int right = mid + 1;
+    int j = 0;
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            temp[j] = arr[left];
+            left++;
+            j++;
+            nbrPerm++;
+        } else {
+            temp[j] = arr[right];
+            right++;
+            j++;
+            nbrPerm++;
+        }
+        nbrComp++;
+    }
+    while (left <= mid) {
+        temp[j] = arr[left];
+        left++;
+        j++;
+        nbrPerm++;
+    }
+    while (right <= high) {
+        temp[j] = arr[right];
+        right++;
+        j++;
+        nbrPerm++;
+    }
+    for (int k = 0; k < high - low + 1; k++) {
+        arr[low + k] = temp[k];
+    }
+}
+// merge sort function
+void MergeSortMatrix(char arr[], int low, int high) {
+    if (low < high) {
+        int mid = (low + high) / 2;
+        MergeSort(arr, low, mid);
+        MergeSort(arr, mid + 1, high);
+        Merge(arr, low, mid, high);
+    }
+}
 
 // the function insertion sort
 void insertionsort(int arr[], int sizeofarr){
@@ -336,7 +413,8 @@ void quicksort(int arr[], int start, int end) {
  void combsort(int arr[], int sizeofarr){
      int n= sizeofarr;
      int nbrComp =0, nbrPerm =0;
-     int gap = n / 1.3;
+    float shrinkfactor=1.3;
+    int  gap = (int)floor(gap / shrinkfactor);
      while(gap >=1){
         for(int i=0;i<sizeofarr-1-gap;i++){
             nbrComp++;
@@ -348,27 +426,27 @@ void quicksort(int arr[], int start, int end) {
             }
         }
         Display(arr,sizeofarr);
-        gap = gap / 1.3;
+         gap = (int)floor(gap / shrinkfactor);
      }
   printf("Number of comparisons : %d \n" , nbrComp);
   printf("number of permutations : %d \n" , nbrPerm);
  }
 
 int main()
-{/*
+{
     int choice;
     printf("choose what data structure do you want to sort");
-      printf("\n=========================================================\n");
+      printf("\n====================================================================================\n");
     printf("     1. Vector Sort    2. Matrix Sort    3. Linked list Sort  \n");
-     printf("\n=========================================================\n");
+      printf("\n====================================================================================\n");
     printf("Enter your choice (1-3): ");
     scanf("%d", &choice);
 
     switch (choice) {
-        case 1:
+        case 1:{
             int choice2;
             int sizearray;
-            int arr[];
+            int arr[5];
             printf("You  have 6 vector sorting algorithms \n");
               printf("1.selection sort\n");
               printf("2.bubble Sort \n");
@@ -378,54 +456,64 @@ int main()
             printf("6.Comb Sort\n");
             printf("enter your choice (1-6):");
             scanf("%d", &choice2);
-            printf("enter the size of your array");
+            printf("enter the size of your array:");
             scanf("%d", &sizearray);
             createarray(sizearray, arr);
             switch(choice2){
             case 1:
-                printf("array before sorting");
-                Display(arr, sizeofarray);
-                SelectionSorting(arr,sizeofarray);
+                printf("array before sorting:");
+                Display(arr, sizearray);
+                SelectionSorting(arr,sizearray);
                 printf("array after selection sorting:");
-                 Display(arr, sizeofarray);
+                 Display(arr, sizearray);
                  break;
             case 2:
-                 printf("array before sorting");
-                Display(arr, sizeofarray);
-                bubbleSort(arr,sizeofarray);
+                 printf("array before sorting:");
+                Display(arr, sizearray);
+                bubbleSort(arr,sizearray);
                 printf("array after bubble sorting:");
-                 Display(arr, sizeofarray);
+                 Display(arr, sizearray);
                  break;
             case 3:
-                 printf("array before sorting");
-                Display(arr, sizeofarray);
-               MergeSort(arr,0 , sizeofarray-1);
+                 printf("array before sorting:");
+                Display(arr, sizearray);
+               MergeSort(arr,0 , sizearray-1);
                 printf("array after merge sorting:");
-                 Display(arr, sizeofarray);
+                 Display(arr, sizearray);
                  break;
             case 4:
-                 printf("array before sorting");
-                Display(arr, sizeofarray);
-                insertionsort(arr,sizeofarray);
+                 printf("array before sorting:");
+                Display(arr, sizearray);
+                insertionsort(arr,sizearray);
                 printf("array after insertion sorting:");
-                 Display(arr, sizeofarray);
+                 Display(arr, sizearray);
                  break;
-            case 5:
-                 printf("array before sorting");
-                Display(arr, sizeofarray);
-                quicksort(arr,0, sizeofarray-1);
-                printf("array after quick sorting:");
-                 Display(arr, sizeofarray);
-                 break;
-            case 6:
-                 printf("array before sorting");
-                Display(arr, sizeofarray);
-                combsort(arr,sizeofarray);
-                printf("array after comb sorting:");
-                 Display(arr, sizeofarray);
+            case 5:{
+                 printf("quick  sorting execution: \n");
+                int  NbrComp=0;
+                int  NbrPerm=0;
+                quicksort(arr ,0 , sizearray-1);
+                printf("sorted array using quick sorting :\n ");
+                Display(arr , sizearray);
+                printf("Number of comparisons : %d \n" , NbrComp);
+                printf("number of permutations : %d \n" , NbrPerm);
                  break;
             }
-        case 2:
+            case 6:
+                 printf("array before sorting:");
+                Display(arr, sizearray);
+                combsort(arr,sizearray);
+                printf("array after comb sorting:");
+                 Display(arr, sizearray);
+                 break;
+
+            default:
+                    printf("Invalid choice!\n");
+            }
+              free(arr); // Free the allocated memory
+            break;
+        }
+        case 2:{
             int choice3;
             int rows, columns;
              printf("You  have 2 character matrix sorting algorithms \n");
@@ -437,20 +525,64 @@ int main()
                 scanf("%d", &rows);
             printf("enter the number of columns of the matrix ");
               scanf("%d", &columns);
-              // making the matrix
-              switch (choice3){
+              int matrix[rows][columns];
+              creatMatrix(rows,columns, matrix);
+              switch(choice3){
+              case 1:
+                 printf("Original Matrix:\n");
+                DisplayMatrix(matrix, rows);
+                BubbleSortMatrix(matrix, rows);
+                printf("matrix after bubble sort:\n");
+                DisplayMatrix(matrix, rows);
+                break;
+              case 2:
+                 printf("Original Matrix:\n");
+                DisplayMatrix(matrix, rows);
+              break;
+                default:
+            printf("Invalid choice.\n");
+            break;
               }
             break;
-        case 3:
-            printf("You selected Linked List Sort.\n");
+        }
+        case 3:{
+            int choice4;
+            int nele;
+            printf("You have 2  sorting algorithms for Linked lists of words.\n");
+              printf("1.Bubble sort\n");
+              printf("2.insertion Sort \n");
+              printf("enter your choice");
+              scanf("%d", &choice4);
+              printf("enter the number of elements of your list ");
+            scanf("%d", &nele);
+              struct telement *l =createlist(nele);
+               switch(choice4){
+               case 1:
+                 printf("original list: \n");
+                Displaylist(l);
+                Bubblesortlist(l);
+                printf("After bubble sorting: \n");
+               Displaylist(l);
+               break;
+               case 2:
+                printf("original list: \n");
+                Displaylist(l);
+                insertionsortlist(l);
+                printf("After insertion sorting: \n");
+                Displaylist(l);
+                 break;
 
+                 default:
+                    printf("Invalid choice.\n");
+               }
+        }
             break;
         default:
             printf("Invalid choice.\n");
             break;
     }
 
-    char matrix[][100] = {"gfr","zvc","qwe", "axd"};
+  /*  char matrix[][100] = {"gfr","zvc","qwe", "axd"};
     int rows = sizeof(matrix) / sizeof(matrix[0]);
 
     int array [] = {64 , 34 , 25 , 12 , 22 , 11 , 90};
