@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 struct telement{
     char mot[100];
     struct telement *next;
@@ -31,11 +32,20 @@ int countelements(struct telement *l){
 }
 // function to create array of integers
 void  createarray(int n,int arr[]){
-    int arr[n];
+    //int arr[n];
     for(int i=0;i<n;i++){
             printf("enter the %d element", &i+1);
            scanf("%d", &arr[i]);
     }
+}
+// function to create a matrix of characters
+void creatMatrix (int n , int m , char  matrix[n][m]){
+  for (int i = 0 ; i < n ; i++){
+    for (int j = 0 ; i < m ; j++){
+        printf("give the %d element" , i+1);
+        scanf("%d\n" , &matrix[i][j]);
+    }
+  }
 }
 
 // function to display the matrix
@@ -56,7 +66,7 @@ printf("\n");
 
 // selection sorting
 void SelectionSorting (int arr [] , int sizeofArr){
-    int min ;
+    int min ; // reprsents the index of the smallest value in the array
     int temp ;
     int nbrComp = 0 ;
     int nbrPerm = 0;
@@ -69,12 +79,14 @@ void SelectionSorting (int arr [] , int sizeofArr){
             nbrComp++;
         }
     }
+    if (min != i){
     temp = arr [i];
     arr[i] = arr[min];
     arr[min] = temp ;
     nbrPerm++ ;
-    printf("Permutation %d: ", i + 1);
+    printf("Permutation %d: ", nbrPerm);
     Display(arr , sizeofArr);
+  }
   }
   printf("Number of comparisons : %d \n" , nbrComp);
   printf("Number of permutations : %d \n" , nbrPerm);
@@ -131,13 +143,14 @@ void BubbleSortMatrix(char matrix[][100], int rows) {
     printf("nombre de comparaison : %d \n" , nbrComp);
     printf("nombre de permutations : %d\n", nbrPerm);
 }
+
 // bubble sort of a linked list
-void Bubblesortlist( struct telement *l){
-     if (l == NULL || l->next == NULL{
+ /* void Bubblesortlist( struct telement *l){
+     if (l == NULL || l->next == NULL){
       printf("the list is already sorted");
      }
      int n = countelements(l);
-     int nbComp =0, nbPerm =0:
+     int nbComp =0, nbPerm =0;
     struct telement *P;
     struct telement *Q;
      struct telement *prev;
@@ -168,7 +181,8 @@ void Bubblesortlist( struct telement *l){
             Displaylist(l);
      }
 
-}
+} */
+
 // the function merge
  // global variables for comp & perm counters
 int nbrComp = 0;
@@ -223,6 +237,53 @@ void MergeSort (int arr [] , int low , int high){
     }
 }
 
+// merge sort with a matrix
+ // merge function
+void MergeMatrix(char arr[], int low, int mid, int high) {
+    char temp[high - low + 1];
+    int left = low;
+    int right = mid + 1;
+    int j = 0;
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            temp[j] = arr[left];
+            left++;
+            j++;
+            nbrPerm++;
+        } else {
+            temp[j] = arr[right];
+            right++;
+            j++;
+            nbrPerm++;
+        }
+        nbrComp++;
+    }
+    while (left <= mid) {
+        temp[j] = arr[left];
+        left++;
+        j++;
+        nbrPerm++;
+    }
+    while (right <= high) {
+        temp[j] = arr[right];
+        right++;
+        j++;
+        nbrPerm++;
+    }
+    for (int k = 0; k < high - low + 1; k++) {
+        arr[low + k] = temp[k];
+    }
+}
+// merge sort function
+void MergeSortMatrix(char arr[], int low, int high) {
+    if (low < high) {
+        int mid = (low + high) / 2;
+        MergeSort(arr, low, mid);
+        MergeSort(arr, mid + 1, high);
+        Merge(arr, low, mid, high);
+    }
+}
+
 // the function insertion sort
 void insertionsort(int arr[], int sizeofarr){
     int i, j, temp;
@@ -248,7 +309,7 @@ void  insertionsortlist(struct telement* l ) {
     if (l == NULL || l->next == NULL){
         printf("the list is already sorted");
     }
-     int nbComp =0, nbPerm =0:
+     int nbComp =0 , nbPerm =0;
     struct telement *cur;
     struct telement *prev;
      struct telement *P2;
@@ -271,12 +332,13 @@ void  insertionsortlist(struct telement* l ) {
         prev->next = cur->next;
         cur->next= temp ->next;
         temp->next= cur;
-        nbPerm++:
+        nbPerm++;
         }
         cur = prev ->next;
+        printf("step by step execution:\n");
         Displaylist(l);
     }
-      printf("nombre de comparaison : %d \n" , nbrComp);
+    printf("nombre de comparaison : %d \n" , nbrComp);
     printf("nombre de permutations : %d\n", nbrPerm);
 
 }
@@ -342,7 +404,7 @@ int partition(int arr[], int start, int end ){
 
 int main()
 {
-    int choice;
+  /*  int choice;
     printf("choose what data structure do you want to sort");
       printf("\n=========================================================\n");
     printf("     1. Vector Sort    2. Matrix Sort    3. Linked list Sort  \n");
@@ -434,8 +496,8 @@ int main()
         default:
             printf("Invalid choice.\n");
             break;
-    }
-    /*
+    } */
+
 
     int array [] = {64 , 34 , 25 , 12 , 22 , 11 , 90};
     int arraySize = sizeof(array) / sizeof(array[0]);
@@ -452,53 +514,62 @@ int main()
     printf("sorted array using selection sorting \n ");
     Display(array , arraySize);
 
-    printf("Bubble sorting execution \n");
+   /* printf("Bubble sorting execution \n");
     bubbleSort(array , arraySize);
     printf("sorted array using bubble sorting \n ");
-    Display(array , arraySize);
+    Display(array , arraySize); */
 
-    printf("merge sort execution \n");
+  /*  printf("merge sort execution \n");
     MergeSort(array , 0 , arraySize -1 );
     printf("comparisions %d \n", nbrComp);
     printf("permutations %d \n" , nbrPerm);
     printf("sorted array using merge sorting \n");
-    Display(array , arraySize);
+    Display(array , arraySize); */
 
-
+  /*  // matrix
     printf("Original Matrix:\n");
     DisplayMatrix(matrix, rows);
 
     BubbleSortMatrix(matrix, rows);
     printf("matrix after bubble sort:\n");
-    DisplayMatrix(matrix, rows);
+    DisplayMatrix(matrix, rows); */
 
-    printf("each step of the insertion sorting process \n");
+   /*  for (int i = 0 ; i< rows ; i++){
+        int len = strlen (matrix[i]); // get the length of the string
+        MergeSortMatrix(matrix[i] , 0 , len - 1);
+        printf("step number%d\n" , i+1);
+        DisplayMatrix(matrix , rows );
+     }
+     printf("matrix after merge sort\n");
+     DisplayMatrix(matrix , rows); */
+
+   /* printf("each step of the insertion sorting process \n");
     insertionsort(array , arraySize);
     printf("sorted array using insertion sorting \n ");
-    Display(array , arraySize);
+    Display(array , arraySize); */
 
-    printf("insertion sorting execution \n");
+  /*  printf("insertion sorting execution \n");
     insertionsort(array , arraySize);
     printf("sorted array using insertion sorting \n ");
-    Display(array , arraySize);
+    Display(array , arraySize); */
 
-     printf("quick  sorting execution \n");
+   /*  printf("quick  sorting execution \n");
      NbrComp=0;
      NbrPerm=0;
      quicksort(array ,0 , arraySize-1);
      printf("sorted array using quick sorting \n ");
      Display(array , arraySize);
      printf("Number of comparisons : %d \n" , NbrComp);
-     printf("number of permutations : %d \n" , NbrPerm);
+     printf("number of permutations : %d \n" , NbrPerm); */
 
-    printf("comb sorting execution \n");
+  /*  printf("comb sorting execution \n");
     combsort(array , arraySize);
     printf("sorted array using comb sorting \n ");
-    Display(array , arraySize);
+    Display(array , arraySize); */
 
-     struct telement * l = malloc(sizeof(struct telement));
+  /*  struct telement * l = malloc(sizeof(struct telement));
     struct telement* second = malloc(sizeof(struct telement));
-   struct telement* third = malloc(sizeof(struct telement));
+    struct telement* third = malloc(sizeof(struct telement));
 
     strcpy(l->mot, "chaima");
     strcpy(second->mot, "manel");
@@ -514,8 +585,8 @@ int main()
    insertionsortlist(l);
 
     printf("After sorting: \n");
-    Displaylist(l);
-*/
+    Displaylist(l); */
+
 
     return 0;
 }
